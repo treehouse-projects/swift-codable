@@ -32,3 +32,8 @@ let decoder = JSONDecoder()
 let employee = try! decoder.decode(Employee.self, from: json)
 employee.name
 employee.id
+
+let encoder = JSONEncoder()
+let encodedEmployee = try encoder.encode(employee)
+
+print(encodedEmployee.stringDescription)
