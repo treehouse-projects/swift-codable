@@ -8,7 +8,7 @@ let json = """
 }
 """.data(using: .utf8)!
 
-struct Employee: Codable {
+struct Employee: Decodable {
     let name: String
     let id: Int
     let role: String
@@ -32,6 +32,15 @@ let decoder = JSONDecoder()
 let employee = try! decoder.decode(Employee.self, from: json)
 employee.name
 employee.id
+
+extension Employee: Encodable {
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(id, forKey: .id)
+        try container.encode(role, forKey: .role)
+    }
+}
 
 let encoder = JSONEncoder()
 let encodedEmployee = try encoder.encode(employee)
