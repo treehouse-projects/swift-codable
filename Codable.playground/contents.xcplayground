@@ -5,6 +5,7 @@
         <page name='Handling Foundation Types'/>
         <page name='Wrapper Keys'/>
         <page name='Dynamic Keys'/>
+        <page name='Inheritance'/>
         <page name='Error Handling'/>
     </pages>
 </playground>
