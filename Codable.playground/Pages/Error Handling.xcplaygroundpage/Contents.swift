@@ -14,6 +14,10 @@ let decoder = JSONDecoder()
 
 do {
     let user = try decoder.decode(User.self, from: json)
-} catch {
-    print(error)
+} catch let error as DecodingError {
+    print(error.errorDescription)
+    print(error.failureReason)
+    print(error.helpAnchor)
+    print(error.localizedDescription)
+    print(error.recoverySuggestion)
 }
