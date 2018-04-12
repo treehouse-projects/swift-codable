@@ -1,7 +1,9 @@
 import Foundation
 
 let json = """
-10
+{
+    "id": 10
+}
 """.data(using: .utf8)!
 
 struct User: Codable {
@@ -9,3 +11,9 @@ struct User: Codable {
 }
 
 let decoder = JSONDecoder()
+
+do {
+    let user = try decoder.decode(User.self, from: json)
+} catch {
+    print(error)
+}
