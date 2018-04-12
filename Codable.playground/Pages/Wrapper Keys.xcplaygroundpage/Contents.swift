@@ -24,6 +24,7 @@ struct SearchResult {
     let booksCount: Int
     let ratingsCount: Int
     let textReviewsCount: Int
+    let bestBook: Book
     
     enum OuterCodingKeys: String, CodingKey {
         case work
@@ -34,7 +35,19 @@ struct SearchResult {
         case booksCount
         case ratingsCount
         case textReviewsCount
+        case bestBook
     }
+}
+
+struct Author: Codable {
+    let id: Int
+    let name: String
+}
+
+struct Book: Codable {
+    let id: Int
+    let title: String
+    let author: Author
 }
 
 extension SearchResult: Decodable {
@@ -46,6 +59,7 @@ extension SearchResult: Decodable {
         self.booksCount = try innerContainer.decode(Int.self, forKey: .booksCount)
         self.ratingsCount = try innerContainer.decode(Int.self, forKey: .ratingsCount)
         self.textReviewsCount = try innerContainer.decode(Int.self, forKey: .textReviewsCount)
+        self.bestBook = try innerContainer.decode(Book.self, forKey: .bestBook)
     }
 }
 
@@ -53,6 +67,8 @@ let decoder = JSONDecoder()
 decoder.keyDecodingStrategy = .convertFromSnakeCase
 
 let result = try! decoder.decode(SearchResult.self, from: json)
+result.bestBook.title
+result.bestBook.author.name
 
 extension SearchResult: Encodable {
     func encode(to encoder: Encoder) throws {
@@ -63,6 +79,7 @@ extension SearchResult: Encodable {
         try innerContainer.encode(booksCount, forKey: .booksCount)
         try innerContainer.encode(ratingsCount, forKey: .ratingsCount)
         try innerContainer.encode(textReviewsCount, forKey: .textReviewsCount)
+        try innerContainer.encode(bestBook, forKey: .bestBook)
     }
 }
 
