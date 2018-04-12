@@ -4,6 +4,8 @@ let json = """
 {
     "work": {
         "id": 2422333,
+        "popularity": null,
+        "sponsor": "Some Publisher, Inc.",
         "books_count": 222,
         "ratings_count": 860687,
         "text_reviews_count": 37786,
@@ -52,6 +54,8 @@ struct SearchResult {
     let textReviewsCount: Int
     let bestBook: Book
     let candidates: [Book]
+    let popularity: Double?
+    let sponsor: String?
     
     enum OuterCodingKeys: String, CodingKey {
         case work
@@ -64,6 +68,8 @@ struct SearchResult {
         case textReviewsCount
         case bestBook
         case candidates
+        case popularity
+        case sponsor
     }
 }
 
@@ -89,6 +95,8 @@ extension SearchResult: Decodable {
         self.textReviewsCount = try innerContainer.decode(Int.self, forKey: .textReviewsCount)
         self.bestBook = try innerContainer.decode(Book.self, forKey: .bestBook)
         self.candidates = try innerContainer.decode([Book].self, forKey: .candidates)
+        self.popularity = try innerContainer.decode(Double?.self, forKey: .popularity)
+        self.sponsor = try innerContainer.decodeIfPresent(String.self, forKey: .sponsor)
     }
 }
 
@@ -98,6 +106,7 @@ decoder.keyDecodingStrategy = .convertFromSnakeCase
 let result = try! decoder.decode(SearchResult.self, from: json)
 result.bestBook.title
 result.bestBook.author.name
+result.popularity
 
 extension SearchResult: Encodable {
     func encode(to encoder: Encoder) throws {
@@ -110,11 +119,14 @@ extension SearchResult: Encodable {
         try innerContainer.encode(textReviewsCount, forKey: .textReviewsCount)
         try innerContainer.encode(bestBook, forKey: .bestBook)
         try innerContainer.encode(candidates, forKey: .candidates)
+        try innerContainer.encode(popularity, forKey: .popularity)
+        try innerContainer.encodeIfPresent(sponsor, forKey: .sponsor)
     }
 }
 
 let encoder = JSONEncoder()
 encoder.keyEncodingStrategy = .convertToSnakeCase
+encoder.outputFormatting = .prettyPrinted
 
 print(try! encoder.encode(result).stringDescription)
 
